@@ -1,0 +1,26 @@
+{
+  "name": "pokesearch",
+  "version": "1.0.0",
+  "description": "A server that lets the user search for information about Pokemon",
+  "main": "index.js",
+  "dependencies": {
+    "dotenv": "^8.0.0",
+    "mongodb": "^3.3.0-beta2",
+    "nodemon": "^1.19.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index",
+    "test": "nodemon index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rkade1234/corona.git"
+  },
+  "author": "Ravnoor Kambo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rkade1234/corona/issues"
+  },
+  "homepage": "https://github.com/Rkade1234/corona#readme"
+}
