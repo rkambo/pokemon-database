@@ -1,77 +1,35 @@
-const MongoClient = require('mongodb').MongoClient;
-require('dotenv').config();
+const mongoUtil = require('./mongoUtil.js')
+const pkmn = require('./pokemon.js')
 
-const dbName = "pokeDB"
-const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0-kq00f.azure.mongodb.net/test?retryWrites=true&w=majority`;
-const client = new MongoClient(uri, {
-    useNewUrlParser: true
-});
+// let load = {
+//     name: "Bulbasaur",
+//     image: "imageURL",
+//     primaryType: "Grass",
+//     secondaryType: null,
+//     natDexNum: 1,
+//     regDexNum: 1,
+//     gen: 1
+// }
 
-client.connect(err => {
-    if (err) throw err;
-    else {
-        console.log("Mongo Client Connected")
+// mongoUtil.openConn(function (err, client) {
+//     if (err) console.log(err);
+//     let db = mongoUtil.getDb()
+// });
 
-        const db = client.db(dbName);
-        console.log("DB Created")
 
-        const collection = db.collection('pokemon');
-        console.log("Setting Pokemon Collection");
-        console.log("Setting constraints...");
-        collection.createIndex({
-            "name": 1
-        }, {
-            unique: true
-        })
-        let load = {
-            name: "Bulbasaur",
-            image: "imageURL",
-            primaryType: "Grass",
-            secondaryType: null,
-            natDexNum: 1,
-            regDexNum: 1,
-            gen: 1
-        }
+// let pokemon = {
+//     name: info.name,
+//     primaryType: info.types.length > 1 ? info.types[1].type.name : info.types[0].type.name,
+//     secondaryType: info.types.length > 1 ? info.types[0].type.name : null
+// }
 
-        insertDocuments(collection, load)
-    }
+pkmn.getPokemon()
+// pkmn.getPokemonBatch(10).then(response => {
+//     console.log(response.data)
+// });
+// pkmn.getPokemon().then(response => {
+//     let info = response.data
 
-    // perform actions on the collection object
-    client.close();
-});
 
-const findDocuments = (db) => {
-    // Get the documents collection
-    const collection = db.collection('pokemon');
-    // Find some documents
-    let cursor = collection.find({});
-    cursor.forEach((err, doc) => {
-        if (err) {
-            console.error(err);
-        } else {
-            console.log(doc)
-        }
-    })
-}
-
-const insertDocuments = (collection, doc) => {
-    // Get the documents collection
-    if (doc == null || doc.name == null) {
-        console.error("Error: Insufficient details in entry")
-        return;
-    }
-
-    collection.updateOne({
-        name: doc.name
-    }, {
-        $set: doc
-    }, {
-        upsert: true
-    }, (err, result) => {
-        if (err) {
-            console.error(err)
-        } else {
-            console.log(`Inserted ${doc.name} successfully`)
-        }
-    })
-}
+//     console.log(pokemon)
+// });
