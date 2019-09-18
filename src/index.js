@@ -1,5 +1,5 @@
-const mongoUtil = require('./mongoUtil.js')
-const pkmn = require('./pokemon.js')
+//const mongoUtil = require('./mongoUtil.js/index.js')
+const pkmn = require('./pokemon.js');
 
 // let load = {
 //     name: "Bulbasaur",
@@ -23,7 +23,7 @@ const pkmn = require('./pokemon.js')
 //     secondaryType: info.types.length > 1 ? info.types[0].type.name : null
 // }
 
-pkmn.getPokemon()
+pkmn.getPokemon();
 // pkmn.getPokemonBatch(10).then(response => {
 //     console.log(response.data)
 // });
