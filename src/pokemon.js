@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const BATCH_SIZE = 100;
+const BATCH_SIZE = 10;
 
 /**
  *
@@ -43,21 +43,25 @@ const getPokemonInfo = async (batchInfo) => {
 
 getPokemonBatch(BATCH_SIZE).then((response) => {
   getPokemonInfo(response[0].data)
-      .then((infoResponse) => {
-        console.log(infoResponse[0].data);
+      .then((genInfoResponse) => {
+        getPokemonInfo(response[1].data)
+            .then( (speciesInfoResponse) => {
+              const payload = [];
+              for (i = 0; i < genInfoResponse.length; i++) {
+                payload.push({
+                  'name': genInfoResponse[i].data.name,
+                  'category': speciesInfoResponse[i].data.genera[2].genus,
+                });
+              }
+              return payload;
+            }).catch((error) => {
+              console.error(error);
+            });
       }).catch((error) => {
         console.error(error);
       });
-  getPokemonInfo(response[1].data)
-      .then((infoResponse) => {
-        console.log(infoResponse[0].data);
-      }).catch((error) => {
-        console.error(error);
-      });
-
-  // getPokemonSpeciesInfo(response[1].data);
 }).catch((err) => {
-  console.log(err);
+  console.error(err);
 });
 
 // async function getPokemon() {
@@ -71,5 +75,5 @@ getPokemonBatch(BATCH_SIZE).then((response) => {
 // }
 
 module.exports = {
-  getPokemon,
+  // getPokemon,
 };
