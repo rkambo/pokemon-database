@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const BATCH_SIZE = 10;
+const BATCH_SIZE = 100;
 
 /**
  *
@@ -41,39 +41,29 @@ const getPokemonInfo = async (batchInfo) => {
   }
 };
 
-getPokemonBatch(BATCH_SIZE).then((response) => {
-  getPokemonInfo(response[0].data)
-      .then((genInfoResponse) => {
-        getPokemonInfo(response[1].data)
-            .then( (speciesInfoResponse) => {
-              const payload = [];
-              for (i = 0; i < genInfoResponse.length; i++) {
-                payload.push({
-                  'name': genInfoResponse[i].data.name,
-                  'category': speciesInfoResponse[i].data.genera[2].genus,
-                });
-              }
-              return payload;
-            }).catch((error) => {
-              console.error(error);
-            });
-      }).catch((error) => {
-        console.error(error);
-      });
-}).catch((err) => {
-  console.error(err);
-});
+/**
+ * @return {Promise} - Returns an array of JSON objects containing the relevant pokemon information
+ *
+ * @description - Returns an object of information compiled from the API information
+ */
+const getPokemon = async () => {
+  try {
+    const pokemonBatch = await getPokemonBatch(BATCH_SIZE);
+    const infoResponse = await Promise.all([getPokemonInfo(pokemonBatch[0].data), getPokemonInfo(pokemonBatch[1].data)]);
+    const payload = [];
 
-// async function getPokemon() {
-//   try {
-//     getPokemonBatch(BATCH_SIZE).then((response) => {
-//       console.log(response.data);
-//     });
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }
+    for (i = 0; i < infoResponse[0].length; i++) {
+      payload.push({
+        'name': infoResponse[0][i].data.name,
+        'category': infoResponse[1][i].data.genera[2].genus,
+      });
+    }
+    return payload;
+  } catch (error) {
+    throw error;
+  }
+};
 
 module.exports = {
-  // getPokemon,
+  getPokemon,
 };

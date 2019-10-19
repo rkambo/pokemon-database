@@ -23,7 +23,7 @@ const pkmn = require('./pokemon.js');
 //     secondaryType: info.types.length > 1 ? info.types[0].type.name : null
 // }
 
-pkmn.getPokemon();
+pkmn.getPokemon().then(console.log);
 // pkmn.getPokemonBatch(10).then(response => {
 //     console.log(response.data)
 // });
