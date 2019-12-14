@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const BATCH_SIZE = 100;
+const BATCH_SIZE = 10;
 
 /**
  *
@@ -53,11 +53,32 @@ const getPokemon = async () => {
     const payload = [];
 
     for (i = 0; i < infoResponse[0].length; i++) {
+      const dexEntriesRaw = infoResponse[1][i].data.flavor_text_entries;
+      const dexEntries = [];
+      
+      for(j = 0; j < dexEntriesRaw.length; j++){
+        if(dexEntriesRaw[j].language.name === "en"){
+          dexEntries.push({
+            version: dexEntriesRaw[j].version.name,
+            entry: dexEntriesRaw[j].flavor_text.replace(/[\f\r\t\n]+/g," ").trim()
+          });
+        }
+      }
       payload.push({
+        'image': infoResponse[0][i].data.sprites.front_default,
         'name': infoResponse[0][i].data.name,
         'category': infoResponse[1][i].data.genera[2].genus,
+        'entries': dexEntries
       });
     }
+
+    // for(i = 0; i < infoResponse[1][0].data.flavor_text_entries.length; i++){
+    //   if(infoResponse[1][0].data.flavor_text_entries[i].language.name === "en"){
+    //     console.log(infoResponse[1][0].data.flavor_text_entries[i].flavor_text)
+    //   }
+    // }
+    // console.log(infoResponse[1][0].data.flavor_text_entries[1].language.name)
+    
     return payload;
   } catch (error) {
     throw error;
