@@ -21,7 +21,7 @@ const getDb = function() {
 
 const findDocuments = (db) => {
   // Get the documents collection
-  const collection = db.collection('pokemon');
+  const collection = db.collection(collName);
   // Find some documents
   const cursor = collection.find({});
   cursor.forEach((err, doc) => {
@@ -34,7 +34,7 @@ const findDocuments = (db) => {
 };
 const insertDocuments = (db, doc) => {
   // Get the documents collection
-  const collection = db.collection('pokemon');
+  const collection = db.collection(collName);
 
   if (doc == null || doc.name == null) {
     console.error('Error: Insufficient details in entry');

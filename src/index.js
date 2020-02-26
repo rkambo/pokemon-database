@@ -1,56 +1,43 @@
-// const mongoUtil = require('./mongoUtil.js/index.js')
+const mongoUtil = require('./mongoUtil.js');
 const pkmn = require('./pokemon.js');
-const { PerformanceObserver, performance } = require('perf_hooks');
+let db;
 
 const BATCH_SIZE = 100;
-// let load = {
-//     name: "Bulbasaur",
-//     image: "imageURL",
-//     primaryType: "Grass",
-//     secondaryType: null,
-//     natDexNum: 1,
-//     regDexNum: 1,
-//     gen: 1
-// }
 
-// mongoUtil.openConn(function (err, client) {
-//     if (err) console.log(err);
-//     let db = mongoUtil.getDb()
-// });
+mongoUtil.openConn(function(err) {
+  db = mongoUtil.getDb();
+  if (err) console.log(err);
+  getAllPokemon(BATCH_SIZE, 0);
+});
 
-
-// let pokemon = {
-//     name: info.name,
-//     primaryType: info.types.length > 1 ? info.types[1].type.name : info.types[0].type.name,
-//     secondaryType: info.types.length > 1 ? info.types[0].type.name : null
-// }
-
-const myFunc = (batchSize,offset) => {
-    pkmn.getPokemon(batchSize,offset).then(response => {
-        console.log(response);
-        if(response.next !== null){
-            setTimeout(function() {
-                return myFunc(BATCH_SIZE,offset + BATCH_SIZE);                
-            }, 60000);
-        }
-    }).catch( (error) => {
-        console.log(error);
-    });
+/**
+ *
+ * @param {*} response - The response body from getAllPokemon containing the pokemon information to insert into the database collection.
+ *
+ * @description - Inserts the entries into the MongoDB collection
+ */
+function insertPokemon(response) {
+  response.pokemonInfo.forEach((doc) => {
+    mongoUtil.insertDocuments(db, doc);
+  });
 }
-myFunc(BATCH_SIZE,0)
 
-// pkmn.getPokemon(10,800).then(response => {
-//     console.log(response);
-// }).catch((error) => {
-//     console.log(error);
-// });
-
-// pkmn.getPokemonBatch(10).then(response => {
-//     console.log(response.data)
-// });
-// pkmn.getPokemon().then(response => {
-//     let info = response.data
-
-
-//     console.log(pokemon)
-// });
+/**
+ *
+ * @param {*} batchSize - The number of pokemon fetched with a request at once
+ * @param {*} offset - The offset from the previous request
+ *
+ * @description - A recursive wrap for the getPokemon function. Runs every minute to avoid overloading the endpoint
+ */
+const getAllPokemon = (batchSize, offset) => {
+  pkmn.getPokemon(batchSize, offset).then((response) => {
+    insertPokemon(response);
+    if (response.next !== null) {
+      setTimeout(function() {
+        return getAllPokemon(BATCH_SIZE, offset + BATCH_SIZE);
+      }, 60000);
+    }
+  }).catch( (error) => {
+    console.log(error);
+  });
+};
