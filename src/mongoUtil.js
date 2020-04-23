@@ -1,14 +1,16 @@
 const MongoClient = require('mongodb').MongoClient;
-require('dotenv').config();
+require('dotenv').config({path: '\.env'});
 
-const dbName = 'pokeDB';
-const collName = 'pokemon';
+const dbName = process.env.DB_NAME;
+const collName = process.env.DB_COLLECTION;
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0-kq00f.azure.mongodb.net/test?retryWrites=true&w=majority`;
+
 let _db = '';
 
 openConn = (callback) => {
   MongoClient.connect(uri, {
     useNewUrlParser: true,
+    useUnifiedTopology: true,
   }, function(err, client) {
     _db = client.db(dbName);
     return callback(err);
@@ -19,18 +21,17 @@ const getDb = function() {
   return _db;
 };
 
-const findDocuments = (db) => {
+const findDocuments = async (db, query, limit) => {
+  if (limit === undefined) {
+    limit = 5;
+  }
+  //const results = [];
   // Get the documents collection
   const collection = db.collection(collName);
   // Find some documents
-  const cursor = collection.find({});
-  cursor.forEach((err, doc) => {
-    if (err) {
-      console.error(err);
-    } else {
-      console.log(doc);
-    }
-  });
+  return collection.find({
+    name: {$regex: `^${query}`},
+  }).limit(limit).toArray();
 };
 const insertDocuments = (db, doc) => {
   // Get the documents collection
