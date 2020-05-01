@@ -6,9 +6,11 @@ import {PostRequestAsyncAwait} from './PostRequestAsync.js';
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-      <PostRequestAsyncAwait></PostRequestAsyncAwait>
-      </header>
+      <div className = "App-header">
+     <div className = "App-Component">
+     <Searchbar></Searchbar>
+     </div>
+     </div>
     </div>
   );
 }

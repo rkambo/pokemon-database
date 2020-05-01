@@ -1,12 +1,13 @@
 import React from 'react';
+import Searchbar from './Searchbar';
 
 class PostRequestAsyncAwait extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            name: ''
-        };
+        //this.state = {
+        //    name: ''
+        //};
     }
 
     async componentDidMount() {
@@ -16,10 +17,10 @@ class PostRequestAsyncAwait extends React.Component {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: 'car' })
         };
-        const response = await fetch('http://localhost:3001/searchPokemon', requestOptions);
-        const data = await response.json();
-        console.log(data.results[0].name)
-        this.setState({ name: data.results[0].name });
+        //const response = await fetch('http://localhost:3001/searchPokemon', requestOptions);
+       // const data = await response.json();
+        //console.log(data.results[0].name)
+        //this.setState({ name: data.results[0].name });
     }
 
     render() {
@@ -27,9 +28,10 @@ class PostRequestAsyncAwait extends React.Component {
         return (
             <div className="card text-center m-3">
                 <h5 className="card-header">POST Request with Async/Await</h5>
-                <div className="card-body">
+                <Searchbar></Searchbar>
+                {/*<div className="card-body">
                     Returned Id: {this.state.name};
-                </div>
+                </div>*/}
             </div>
         );
     }
