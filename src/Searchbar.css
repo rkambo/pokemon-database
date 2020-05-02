@@ -31,8 +31,10 @@
 }
 
 .Searchbar li {
+    background-color: rgb(226, 220, 220);
     padding: 10px 5px;
     cursor: pointer;
+    text-transform: capitalize;
 }
 
 .Searchbar li:hover {
