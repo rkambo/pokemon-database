@@ -21,7 +21,7 @@ class Searchbar extends React.Component{
           const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: value })
+            body: JSON.stringify({ name: value.toLowerCase() })
         };
         this.setState(() => ({
           text:value.name
@@ -52,7 +52,6 @@ class Searchbar extends React.Component{
       }
       renderSuggestions(){
         const {suggestions} = this.state
-        //console.log(suggestions.results.map((item) => `<li onClick={() => this.suggestionSelected(item)}>${item.name}</li>`))
         if (suggestions.results === undefined || suggestions.results.length === 0){
           return null;
         }
