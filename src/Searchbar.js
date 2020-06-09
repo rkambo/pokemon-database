@@ -1,6 +1,6 @@
 import React from 'react';
 import './Searchbar.css';
-import { func } from 'prop-types';
+//import { func } from 'prop-types';
 
 
 class Searchbar extends React.Component{
@@ -45,6 +45,7 @@ class Searchbar extends React.Component{
       }
 
       suggestionSelected(value){
+        this.props.action(value.image,value.name)
         this.setState(()=> ({
           text:value.name,
           suggestions: [],
