@@ -1,8 +1,14 @@
+# Backend ignores
+
 .env
 
 /node_modules
 
 backend/.DS_Store
+
+
+# Frontend ignores
+
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
