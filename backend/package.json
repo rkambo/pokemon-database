@@ -20,7 +20,7 @@
   },
   "scripts": {
     "start": "node src/index",
-    "test": "nodemon index"
+    "test": "nodemon src/index"
   },
   "repository": {
     "type": "git",

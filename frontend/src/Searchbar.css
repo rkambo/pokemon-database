@@ -37,6 +37,6 @@
     text-transform: capitalize;
 }
 
-.Searchbar li:hover {
+.Searchbar li:hover, li.active {
     background-color: rgb(206, 203, 203)
 }

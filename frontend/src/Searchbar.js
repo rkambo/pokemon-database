@@ -6,7 +6,9 @@ import './Searchbar.css';
 class Searchbar extends React.Component{
     constructor(props) {
         super(props);
+        this.handleKeyDown = this.handleKeyDown.bind(this)
         this.state = {
+          cursor: 0,
           suggestions: [],
           text: '',
         }
@@ -43,30 +45,53 @@ class Searchbar extends React.Component{
           }))
         }
       }
-
+      handleKeyDown = (e) => {
+        const { cursor, suggestions } = this.state
+        // arrow up/down button should select next/previous list element
+        if(e.keyCode === 38 && cursor > 0){
+          this.setState( prevState => ({
+            cursor: prevState.cursor - 1
+          }))
+        }
+        else if(e.keyCode === 40 && suggestions.results != null && cursor < suggestions.results.length - 1){
+            this.setState( prevState => ({
+            cursor: prevState.cursor + 1
+          }))
+        }
+        else if(e.keyCode === 13){
+          this.suggestionSelected(suggestions.results[cursor]);
+        }
+      }
       suggestionSelected(value){
         this.props.action(value.image,value.name)
         this.setState(()=> ({
           text:value.name,
+          cursor: 0,
           suggestions: [],
         }))
       }
-      renderSuggestions(){
+      renderSuggestions(cursor){
         const {suggestions} = this.state
         if (suggestions.results === undefined || suggestions.results.length === 0){
           return null;
         }
        return( <ul>
-              {suggestions.results.map((item) => <li onClick={() => this.suggestionSelected(item)}>{item.name}</li>)}
+              {suggestions.results.map((item, i) => 
+              <li 
+                class = {i === cursor ? "active" : null} 
+                  onClick={() => this.suggestionSelected(item)}
+                  onKeyDown={this.handleKeyDown}>
+                {item.name}</li>)}
             </ul>)
       }
 
       render() {
         const { text } = this.state
+        const { cursor } = this.state
         return (
           <div className = "Searchbar">
-            <input value = {text} type ='text' onChange={this.onTextChanged}/>
-            {this.renderSuggestions()}
+            <input value = {text} type ='text' onChange={this.onTextChanged} onKeyDown={this.handleKeyDown}/>
+            {this.renderSuggestions(cursor)}
           </div>
         );
       }
