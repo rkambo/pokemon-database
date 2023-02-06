@@ -2,11 +2,12 @@ const mongoUtil = require('./mongoUtil.js');
 const pkmn = require('./pokemon.js');
 let db;
 
-const BATCH_SIZE = 100;
+const BATCH_SIZE = 50;
 
 mongoUtil.openConn(function(err) {
   db = mongoUtil.getDb();
   if (err) console.log(err);
+  console.log('Getting pokemon...');
   getAllPokemon(BATCH_SIZE, 0);
 });
 
@@ -31,11 +32,12 @@ function insertPokemon(response) {
  */
 const getAllPokemon = (batchSize, offset) => {
   pkmn.getPokemon(batchSize, offset).then((response) => {
+    console.log(response);
     insertPokemon(response);
     if (response.next !== null) {
       setTimeout(function() {
         return getAllPokemon(BATCH_SIZE, offset + BATCH_SIZE);
-      }, 60000);
+      }, 10000);
     }
   }).catch( (error) => {
     console.log(error);

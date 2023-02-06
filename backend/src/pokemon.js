@@ -1,4 +1,14 @@
 const axios = require('axios');
+const http = require('http');
+const https = require('https');
+const httpAgent = new http.Agent({ keepAlive: true });
+const httpsAgent = new https.Agent({ keepAlive: true });
+const pokeAPI = axios.create({
+  timeout: 60000,
+  httpsAgent : httpsAgent,
+  httpAgent : httpAgent,
+  baseURL : 'https://pokeapi.co/api/v2'
+})
 
 /**
  *
@@ -11,8 +21,8 @@ const axios = require('axios');
  */
 const getPokemonBatch = async (batchSize, offset) => {
   try {
-    const pokemonGenInfoBatchUrls = await axios.get(`https://pokeapi.co/api/v2/pokemon/?offset=${offset}&limit=${batchSize}`);
-    const pokemonSpeciesInfoBatchUrls = await axios.get(`https://pokeapi.co/api/v2/pokemon-species/?offset=${offset}&limit=${batchSize}`);
+    const pokemonGenInfoBatchUrls = await pokeAPI.get(`/pokemon/?offset=${offset}&limit=${batchSize}`);
+    const pokemonSpeciesInfoBatchUrls = await pokeAPI.get(`/pokemon-species/?offset=${offset}&limit=${batchSize}`);
 
     const pokemonGenInfoBatch = [];
     const pokemonSpeciesInfoBatch = [];
@@ -79,7 +89,7 @@ const getPokemon = async (batchSize, offset) => {
       obj.pokemonInfo.push({
         'image': genInfo[i].data.sprites.front_default,
         'name': genInfo[i].data.name,
-        'category': speciesInfo[i].data.genera[2].genus,
+        'category': speciesInfo[i].data.genera[7].genus,
         'entries': dexEntries,
       });
     }
