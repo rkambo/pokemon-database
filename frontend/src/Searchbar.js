@@ -63,7 +63,7 @@ class Searchbar extends React.Component{
         }
       }
       suggestionSelected(value){
-        this.props.action(value.image,value.name)
+        this.props.action(value.image,value.name, value.category,value.entries[Math.floor(Math.random()*value.entries.length)].entry)
         this.setState(()=> ({
           text:value.name,
           cursor: 0,
