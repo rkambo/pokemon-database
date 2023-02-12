@@ -2,15 +2,27 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
+	"sync"
 )
 
 type Pokemon struct {
+	Id     int    `json:"id"`
+	Name   string `json:"name"`
+	Image  string
+	Genera []struct {
+		Category string `json:"genus"`
+	}
 }
 
-func apiCallout(endpoint string, c chan string) (response string) {
+func setImagePath(pokemon *Pokemon) {
+	pokemon.Image = fmt.Sprintf("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/%d.svg", pokemon.Id)
+}
+
+func apiCallout(endpoint string) (response string) {
 	resp, err := http.Get(endpoint)
 	if err != nil {
 		log.Fatalf(err.Error())
@@ -18,57 +30,59 @@ func apiCallout(endpoint string, c chan string) (response string) {
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
 
-	if c != nil {
-		c <- string(body)
-		return ""
-	}
-
 	return string(body)
 }
 
-func getUrlBatches() (retBatchOne []string, retBatchTwo []string) {
-	batchOne := apiCallout("https://pokeapi.co/api/v2/pokemon?limit=2", nil)
-	batchTwo := apiCallout("https://pokeapi.co/api/v2/pokemon-species?limit=2", nil)
-
-	var batchOneResponseMap map[string]any
-	json.Unmarshal([]byte(batchOne), &batchOneResponseMap)
+func getUrlBatches() []string {
+	batch := apiCallout("https://pokeapi.co/api/v2/pokemon-species?limit=100000")
 
 	var batchTwoResponseMap map[string]any
-	json.Unmarshal([]byte(batchTwo), &batchTwoResponseMap)
+	json.Unmarshal([]byte(batch), &batchTwoResponseMap)
 
-	var batchOneUrls []string
-	var batchTwoUrls []string
-
-	for _, url := range batchOneResponseMap["results"].([]interface{}) {
-		name := (url.(map[string]interface{})["url"]).(string)
-		batchOneUrls = append(batchOneUrls, name)
-	}
+	var batchUrls []string
 
 	for _, url := range batchTwoResponseMap["results"].([]interface{}) {
 		name := (url.(map[string]interface{})["url"]).(string)
-		batchTwoUrls = append(batchTwoUrls, name)
+		batchUrls = append(batchUrls, name)
 	}
 
-	return batchOneUrls, batchTwoUrls
+	return batchUrls
 }
 
-func bulkInfoRetrieve(batchOne []string, batchTwo []string) {
-	batchOneChannel := make(chan string)
-	batchTwoChannel := make(chan string)
+func bulkInfoRetrieve(batch []string) {
 
-	for _, v := range batchOne {
-		go apiCalloutGo(v, batchOneChannel)
+	var wg sync.WaitGroup
+
+	for _, v := range batch {
+		wg.Add(1)
+		go wrapApiCallout(&wg, v)
 	}
 
-	for _, v := range batchTwo {
-		go apiCalloutGo(v, batchTwoChannel)
+	wg.Wait()
+}
+
+func wrapApiCallout(wg *sync.WaitGroup, endpoint string) {
+	pokemonMap := make(map[string](Pokemon))
+	response := apiCallout(endpoint)
+
+	formatPayload(response, &pokemonMap)
+
+	wg.Done()
+}
+
+func formatPayload(response string, pokemonMap *map[string](Pokemon)) {
+	data := Pokemon{}
+
+	err := json.Unmarshal([]byte(response), &data)
+	if err != nil {
+		log.Fatalf(err.Error())
 	}
+	setImagePath(&data)
+	(*pokemonMap)[data.Name] = data
+	fmt.Println("Loading %s...", (*pokemonMap)[data.Name].Name)
 }
 
 func main() {
-	//endpoint := "https://pokeapi.co/api/v2/pokemon?limit=100000"
-	//endpoint2 := "https://pokeapi.co/api/v2/pokemon-species?limit=100000"
-	batchOne, batchTwo := getUrlBatches()
-	bulkInfoRetrieve(batchOne, batchTwo)
-
+	urlBatch := getUrlBatches()
+	bulkInfoRetrieve(urlBatch)
 }
