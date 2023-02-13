@@ -16,6 +16,12 @@ type Pokemon struct {
 	Genera []struct {
 		Category string `json:"genus"`
 	}
+	Flavor_Text_Entries []struct {
+		Entry    string `json:"flavor_text"`
+		Language struct {
+			Name string `json:"name"`
+		}
+	}
 }
 
 func setImagePath(pokemon *Pokemon) {
@@ -34,7 +40,7 @@ func apiCallout(endpoint string) (response string) {
 }
 
 func getUrlBatches() []string {
-	batch := apiCallout("https://pokeapi.co/api/v2/pokemon-species?limit=100000")
+	batch := apiCallout("https://pokeapi.co/api/v2/pokemon-species?limit=1")
 
 	var batchTwoResponseMap map[string]any
 	json.Unmarshal([]byte(batch), &batchTwoResponseMap)
@@ -79,7 +85,6 @@ func formatPayload(response string, pokemonMap *map[string](Pokemon)) {
 	}
 	setImagePath(&data)
 	(*pokemonMap)[data.Name] = data
-	fmt.Println("Loading %s...", (*pokemonMap)[data.Name].Name)
 }
 
 func main() {
