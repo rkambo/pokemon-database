@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
 
@@ -11,9 +10,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func main() {
-
-	uri := "mongodb+srv://<username>:<password>@cluster0.kq00f.azure.mongodb.net/?retryWrites=true&w=majority"
+func connect() *mongo.Client {
+	uri := "mongodb+srv://<Username>:<Password>@cluster0.kq00f.azure.mongodb.net/?retryWrites=true&w=majority"
 	if uri == "" {
 		log.Fatal("You must set your 'MONGODB_URI' environmental variable. See\n\t https://www.mongodb.com/docs/drivers/go/current/usage-examples/#environment-variable")
 	}
@@ -21,35 +19,55 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	defer func() {
-		if err := client.Disconnect(context.TODO()); err != nil {
-			panic(err)
-		}
-	}()
-
-	coll := client.Database("pokeDB").Collection("pokemon")
-	name := "bulbasaur"
-
-	var result bson.M
-	err = coll.FindOne(context.TODO(), bson.D{{"name", name}}).Decode(&result)
-
-	if err == mongo.ErrNoDocuments {
-		fmt.Printf("No document was found with the title %s\n", name)
-		return
-	}
-	if err != nil {
-		panic(err)
-	}
-
-	jsonData, err := json.MarshalIndent(result, "", "    ")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("%s\n", jsonData)
-
+	fmt.Println("Connected to Mongo...")
+	return client
 }
 
-func loadPokemon(collection *mongo.Collection, pokemonMap *map[string](Pokemon)) {
+func disconnect(client *mongo.Client) {
+	if err := client.Disconnect(context.TODO()); err != nil {
+		panic(err)
+	}
+	println("Disconnected from Mongo")
+}
+func insertPokemon(client *mongo.Client, pokemonMap *map[string](Pokemon)) {
+
+	coll := client.Database("pokeDB").Collection("pokemon")
+
+	for _, val := range *pokemonMap {
+		var doc bson.D
+
+		filter := bson.D{{"id", val.Id}}
+		data, err := bson.Marshal(val)
+		if err != nil {
+			return
+		}
+
+		err = bson.Unmarshal(data, &doc)
+
+		update := bson.D{{"$set", doc}}
+		opts := options.Update().SetUpsert(true)
+
+		_, err = coll.UpdateOne(context.TODO(), filter, update, opts)
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println("Loaded ", val.Name)
+	}
+}
+
+func loadPokemon(pokemonMap *map[string](Pokemon)) {
+
+	// connect to Client
+	client := connect()
+	defer disconnect(client)
+
+	insertPokemon(client, pokemonMap)
+
+	// var result bson.M
+	// err := collection.FindOne(context.TODO(), bson.D{{"name", "bulbasaur"}}).Decode(&result)
+	// if err != nil {
+	// 	panic(err)
+	// }
 
 }

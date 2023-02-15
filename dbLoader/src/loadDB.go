@@ -10,16 +10,16 @@ import (
 )
 
 type Pokemon struct {
-	Id     int    `json:"id"`
-	Name   string `json:"name"`
-	Image  string
+	Id     int    `json:"id" bson:"id"`
+	Name   string `json:"name" bson:"name"`
+	Image  string `bson:"imagepath"`
 	Genera []struct {
-		Category string `json:"genus"`
+		Category string `json:"genus" bson:"genus"`
 	}
 	Flavor_Text_Entries []struct {
-		Entry    string `json:"flavor_text"`
+		Entry    string `json:"flavor_text" bson:flavor_text`
 		Language struct {
-			Name string `json:"name"`
+			Name string `json:"name" bson:"name"`
 		}
 	}
 }
@@ -55,23 +55,25 @@ func getUrlBatches() []string {
 	return batchUrls
 }
 
-func bulkInfoRetrieve(batch []string) {
+func bulkInfoRetrieve(batch []string) (pokemonMapResponse *map[string](Pokemon)) {
+	pokemonMap := make(map[string](Pokemon))
 
 	var wg sync.WaitGroup
 
 	for _, v := range batch {
 		wg.Add(1)
-		go wrapApiCallout(&wg, v)
+		go wrapApiCallout(&wg, v, &pokemonMap)
 	}
 
 	wg.Wait()
+
+	return &pokemonMap
 }
 
-func wrapApiCallout(wg *sync.WaitGroup, endpoint string) {
-	pokemonMap := make(map[string](Pokemon))
+func wrapApiCallout(wg *sync.WaitGroup, endpoint string, pokemonMap *map[string](Pokemon)) {
 	response := apiCallout(endpoint)
 
-	formatPayload(response, &pokemonMap)
+	formatPayload(response, pokemonMap)
 
 	wg.Done()
 }
@@ -89,5 +91,6 @@ func formatPayload(response string, pokemonMap *map[string](Pokemon)) {
 
 func main() {
 	urlBatch := getUrlBatches()
-	bulkInfoRetrieve(urlBatch)
+	pokemonMap := bulkInfoRetrieve(urlBatch)
+	loadPokemon(pokemonMap)
 }
