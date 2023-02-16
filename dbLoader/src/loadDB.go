@@ -24,6 +24,8 @@ type Pokemon struct {
 	}
 }
 
+var mutex = &sync.Mutex{}
+
 func setImagePath(pokemon *Pokemon) {
 	pokemon.Image = fmt.Sprintf("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/%d.svg", pokemon.Id)
 }
@@ -40,7 +42,7 @@ func apiCallout(endpoint string) (response string) {
 }
 
 func getUrlBatches() []string {
-	batch := apiCallout("https://pokeapi.co/api/v2/pokemon-species?limit=1")
+	batch := apiCallout("https://pokeapi.co/api/v2/pokemon-species?limit=100000")
 
 	var batchTwoResponseMap map[string]any
 	json.Unmarshal([]byte(batch), &batchTwoResponseMap)
@@ -71,11 +73,12 @@ func bulkInfoRetrieve(batch []string) (pokemonMapResponse *map[string](Pokemon))
 }
 
 func wrapApiCallout(wg *sync.WaitGroup, endpoint string, pokemonMap *map[string](Pokemon)) {
+	defer mutex.Unlock()
+	defer wg.Done()
+	mutex.Lock()
 	response := apiCallout(endpoint)
 
 	formatPayload(response, pokemonMap)
-
-	wg.Done()
 }
 
 func formatPayload(response string, pokemonMap *map[string](Pokemon)) {
