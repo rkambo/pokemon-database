@@ -7,6 +7,8 @@ import (
 	"log"
 	"net/http"
 	"sync"
+
+	"github.com/schollz/progressbar/v3"
 )
 
 type Pokemon struct {
@@ -61,10 +63,11 @@ func bulkInfoRetrieve(batch []string) (pokemonMapResponse *map[string](Pokemon))
 	pokemonMap := make(map[string](Pokemon))
 
 	var wg sync.WaitGroup
+	bar := progressbar.Default(int64(len(batch)))
 
 	for _, v := range batch {
 		wg.Add(1)
-		go wrapApiCallout(&wg, v, &pokemonMap)
+		go wrapApiCallout(&wg, v, &pokemonMap, bar)
 	}
 
 	wg.Wait()
@@ -72,13 +75,14 @@ func bulkInfoRetrieve(batch []string) (pokemonMapResponse *map[string](Pokemon))
 	return &pokemonMap
 }
 
-func wrapApiCallout(wg *sync.WaitGroup, endpoint string, pokemonMap *map[string](Pokemon)) {
+func wrapApiCallout(wg *sync.WaitGroup, endpoint string, pokemonMap *map[string](Pokemon), bar *progressbar.ProgressBar) {
 	defer mutex.Unlock()
 	defer wg.Done()
 	mutex.Lock()
 	response := apiCallout(endpoint)
 
 	formatPayload(response, pokemonMap)
+	bar.Add(1)
 }
 
 func formatPayload(response string, pokemonMap *map[string](Pokemon)) {
@@ -92,8 +96,12 @@ func formatPayload(response string, pokemonMap *map[string](Pokemon)) {
 	(*pokemonMap)[data.Name] = data
 }
 
-func main() {
+func loadDB() {
+	fmt.Println("Getting URL Batch...")
 	urlBatch := getUrlBatches()
+	fmt.Println("Batch Retrieved! Retrieving Pokemon info...")
 	pokemonMap := bulkInfoRetrieve(urlBatch)
+	fmt.Println("Info Retrieved! Loading into DB...")
 	loadPokemon(pokemonMap)
+	fmt.Println("Program Complete!")
 }

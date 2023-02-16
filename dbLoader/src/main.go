@@ -12,6 +12,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 type Ref struct {
@@ -22,7 +23,7 @@ type Ref struct {
 func main() {
 
 	// Read the ref.json
-	file, err := os.ReadFile("ref.json")
+	file, err := os.ReadFile("../ref.json")
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -52,23 +53,23 @@ func main() {
 	genCount := result["count"].(float64)
 
 	if out.LastLoadedGen >= genCount {
-		fmt.Printf("Latest pokemon info retrieved!")
+		fmt.Println("Latest pokemon info retrieved!")
+		fmt.Println("Exiting.")
 		// End the program
-		// return;
+		return
 	}
 
-	// loadDB()
+	loadDB()
 
-	// record := Ref{genCount, time.Now().Format("2006-01-02 15:04:05")}
+	record := Ref{genCount, time.Now().Format("2006-01-02 15:04:05")}
 
-	// recordJson, err := json.MarshalIndent(record, "", "\t")
-	// if err != nil {
-	// 	log.Fatalln(err)
-	// }
+	recordJson, err := json.MarshalIndent(record, "", "\t")
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-	// err = os.WriteFile("ref.json", recordJson, 0644)
-	// if err != nil {
-	// 	log.Fatalln(err)
-	// }
-
+	err = os.WriteFile("../ref.json", recordJson, 0644)
+	if err != nil {
+		log.Fatalln(err)
+	}
 }
