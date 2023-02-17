@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"sync"
 
 	"github.com/schollz/progressbar/v3"
@@ -19,7 +20,7 @@ type Pokemon struct {
 		Category string `json:"genus" bson:"genus"`
 	}
 	Flavor_Text_Entries []struct {
-		Entry    string `json:"flavor_text" bson:flavor_text`
+		Entry    string `json:"flavor_text" bson:"flavor_text"`
 		Language struct {
 			Name string `json:"name" bson:"name"`
 		}
@@ -29,7 +30,7 @@ type Pokemon struct {
 var mutex = &sync.Mutex{}
 
 func setImagePath(pokemon *Pokemon) {
-	pokemon.Image = fmt.Sprintf("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/%d.svg", pokemon.Id)
+	pokemon.Image = fmt.Sprintf(os.Getenv("POKEAPI_IMAGEPATHPREFIX"), "%d.svg", pokemon.Id)
 }
 
 func apiCallout(endpoint string) (response string) {
@@ -39,12 +40,14 @@ func apiCallout(endpoint string) (response string) {
 	}
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
-
+	if err != nil {
+		log.Fatalln(err)
+	}
 	return string(body)
 }
 
 func getUrlBatches() []string {
-	batch := apiCallout("https://pokeapi.co/api/v2/pokemon-species?limit=100000")
+	batch := apiCallout(os.Getenv("POKEAPI_SPECIESQUERY"))
 
 	var batchTwoResponseMap map[string]any
 	json.Unmarshal([]byte(batch), &batchTwoResponseMap)

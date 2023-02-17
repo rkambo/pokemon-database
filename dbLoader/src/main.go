@@ -1,8 +1,14 @@
-/*
-TODO: Poll to see if PokeAPI has been updated (Check generation endpoint)
-
-	: If yes, update DB
-*/
+/**********************************************************
+*
+* Description:
+*
+* This file is the main entrypoint into the program.
+* This go module will check the Pokemon endpoint to see if
+* new Pokemon will need to be added. If so, it will grab a
+* batch of required URLs, retrieve info from the URLs, and
+* populate the associated Database collection.
+*
+**********************************************************/
 package main
 
 import (
@@ -13,6 +19,8 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/joho/godotenv"
 )
 
 type Ref struct {
@@ -22,17 +30,23 @@ type Ref struct {
 
 func main() {
 
+	// Load .env file
+	err := godotenv.Load("../.env")
+	if err != nil {
+		log.Fatalln("Error loading .env file", err)
+	}
+
 	// Set up flags for logging
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	logFile, err := os.OpenFile("../log.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	logFile, err := os.OpenFile(os.Getenv("LOG_FILEPATH"), os.O_APPEND|os.O_WRONLY, 0666)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalln(err)
 	}
 	log.SetOutput(logFile)
 
 	// Read the ref.json
-	file, err := os.ReadFile("../ref.json")
+	file, err := os.ReadFile(os.Getenv("REF_FILEPATH"))
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -44,7 +58,7 @@ func main() {
 	}
 
 	// Poll the endpoint
-	resp, err := http.Get("https://pokeapi.co/api/v2/generation")
+	resp, err := http.Get(os.Getenv("POKEAPI_GENERATION"))
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -63,8 +77,8 @@ func main() {
 
 	if out.LastLoadedGen >= genCount {
 		fmt.Println("Latest pokemon info retrieved!")
-		fmt.Println("Exiting.")
-		// End the program
+		fmt.Println("Exiting...")
+
 		return
 	}
 
@@ -77,7 +91,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	err = os.WriteFile("../ref.json", recordJson, 0644)
+	err = os.WriteFile(os.Getenv("REF_FILEPATH"), recordJson, 0644)
 	if err != nil {
 		log.Fatalln(err)
 	}
