@@ -22,6 +22,15 @@ type Ref struct {
 
 func main() {
 
+	// Set up flags for logging
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	logFile, err := os.OpenFile("../log.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.SetOutput(logFile)
+
 	// Read the ref.json
 	file, err := os.ReadFile("../ref.json")
 	if err != nil {
