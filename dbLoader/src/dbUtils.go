@@ -1,3 +1,12 @@
+/**********************************************************
+*
+* Description:
+*
+* This file contains utility functions for connecting to
+* MongoDB, as well as for loading the Pokemon information
+*
+**********************************************************/
+
 package main
 
 import (
@@ -12,6 +21,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+// Connects to the Mongo Database
 func connect() *mongo.Client {
 	uri := os.Getenv("DB_URI")
 	if uri == "" {
@@ -25,12 +35,15 @@ func connect() *mongo.Client {
 	return client
 }
 
+// Disconnects from the Mongo Database
 func disconnect(client *mongo.Client) {
 	if err := client.Disconnect(context.TODO()); err != nil {
 		log.Fatalln(err)
 	}
 	println("Disconnected from Mongo")
 }
+
+// Inserts the Pokemon Map via an Upsert method to MongoDB
 func insertPokemon(client *mongo.Client, pokemonMap *map[string](Pokemon)) {
 
 	coll := client.Database(os.Getenv("DB_NAME")).Collection(os.Getenv("DB_COLLECTION"))
@@ -61,9 +74,9 @@ func insertPokemon(client *mongo.Client, pokemonMap *map[string](Pokemon)) {
 	}
 }
 
+// Wrapper function to load into the database
 func loadPokemon(pokemonMap *map[string](Pokemon)) {
 
-	// connect to Client
 	client := connect()
 	defer disconnect(client)
 

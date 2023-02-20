@@ -57,7 +57,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	// Poll the endpoint
+	// Poll the endpoint to check which generation of Pokemon was last loaded
 	resp, err := http.Get(os.Getenv("POKEAPI_GENERATION"))
 	if err != nil {
 		log.Fatalln(err)
@@ -75,6 +75,7 @@ func main() {
 
 	genCount := result["count"].(float64)
 
+	// Exits program if the latest generation has been loaded
 	if out.LastLoadedGen >= genCount {
 		fmt.Println("Latest pokemon info retrieved!")
 		fmt.Println("Exiting...")
@@ -82,6 +83,7 @@ func main() {
 		return
 	}
 
+	// Runs the loadDB file and loads the Database
 	loadDB()
 
 	record := Ref{genCount, time.Now().Format("2006-01-02 15:04:05")}
