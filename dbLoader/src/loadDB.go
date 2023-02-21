@@ -43,7 +43,7 @@ var mutex = &sync.Mutex{}
 
 // Sets the Image Path instead of firing an API call
 func setImagePath(pokemon *Pokemon) {
-	pokemon.Image = fmt.Sprintf(os.Getenv("POKEAPI_IMAGEPATHPREFIX"), "%d.svg", pokemon.Id)
+	pokemon.Image = fmt.Sprintf(os.Getenv("POKEAPI_IMAGEPATHPREFIX")+"%d.png", pokemon.Id)
 }
 
 // Retrieves a payload via an API call

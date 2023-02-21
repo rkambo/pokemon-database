@@ -31,14 +31,19 @@ type Ref struct {
 func main() {
 
 	// Load .env file
-	err := godotenv.Load("../.env")
+	cwd, err := os.Getwd()
+	if err != nil {
+		log.Fatalln("Couldn't find current working directory", err)
+	}
+
+	err = godotenv.Load(cwd + "/.env")
 	if err != nil {
 		log.Fatalln("Error loading .env file", err)
 	}
 
 	// Set up flags for logging
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	logFile, err := os.OpenFile(os.Getenv("LOG_FILEPATH"), os.O_APPEND|os.O_WRONLY, 0666)
+	logFile, err := os.OpenFile(cwd+os.Getenv("LOG_FILEPATH"), os.O_APPEND|os.O_WRONLY, 0666)
 
 	if err != nil {
 		log.Fatalln(err)
@@ -46,7 +51,7 @@ func main() {
 	log.SetOutput(logFile)
 
 	// Read the ref.json
-	file, err := os.ReadFile(os.Getenv("REF_FILEPATH"))
+	file, err := os.ReadFile(cwd + os.Getenv("REF_FILEPATH"))
 	if err != nil {
 		log.Fatalln(err)
 	}

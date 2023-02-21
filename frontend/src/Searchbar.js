@@ -63,7 +63,9 @@ class Searchbar extends React.Component{
         }
       }
       suggestionSelected(value){
-        this.props.action(value.image,value.name, value.category,value.entries[Math.floor(Math.random()*value.entries.length)].entry)
+        this.props.action(value.imagepath,value.name,
+           (value.genera[7] != null ? value.genera[7].genus : "???"),
+           ( (value.flavor_text_entries == null) ? (value.flavor_text_entries[Math.floor(Math.random()*value.flavor_text_entries.length)].flavor_text_entry) : "Pokemon information unknown"))
         this.setState(()=> ({
           text:value.name,
           cursor: 0,
