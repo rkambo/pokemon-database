@@ -1,9 +1,18 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
-import Searchbar from './components/Searchbar'
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
+import "./App.css";
+import SearchbarContainer from "./containers/SearchbarContainer";
 
-function App() {
+const App = () => {
+  interface Pokemon {
+    name: string;
+  }
+
+  const [selectedPokemon, setSelectedPokemon] = useState<Pokemon>();
+
+  const setPokemon = (pokemon: Pokemon) => {
+    setSelectedPokemon(pokemon);
+  };
 
   return (
     <div className="App">
@@ -14,15 +23,19 @@ function App() {
         <a href="https://reactjs.org" target="_blank">
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
+        {!selectedPokemon ? (
+          <h1>Loading... </h1>
+        ) : (
+          <h1>{selectedPokemon.name}</h1>
+        )}
       </div>
-        <Searchbar />
-      <div className="card">
-      </div>
+      <SearchbarContainer onChange={setPokemon} />
+      <div className="card"></div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
