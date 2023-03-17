@@ -1,7 +1,7 @@
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import "./App.css";
-import SearchbarContainer from "./containers/SearchbarContainer";
+import Searchbar from "./components/Searchbar";
 
 const App = () => {
   interface Pokemon {
@@ -29,7 +29,7 @@ const App = () => {
           <h1>{selectedPokemon.name}</h1>
         )}
       </div>
-      <SearchbarContainer onChange={setPokemon} />
+      <Searchbar onChange={setPokemon} />
       <div className="card"></div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more

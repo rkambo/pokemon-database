@@ -2,6 +2,9 @@ import { React, useState } from "react";
 import Searchbar from "../components/Searchbar";
 
 const SearchbarContainer = () => {
+  const [pokemonSearchQuery, setPokemonSearchQuery] = useState("");
+
+  handleOnChange((event) => {});
   //   useEffect(() => {
   //     const requestOptions = {
   //       method: "POST",
@@ -16,7 +19,7 @@ const SearchbarContainer = () => {
   //     );
   //   }, []);
 
-  return <Searchbar />;
+  return <input type="text" />;
 };
 
 export default SearchbarContainer;
