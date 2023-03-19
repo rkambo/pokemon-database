@@ -2,10 +2,15 @@ import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import "./App.css";
 import Searchbar from "./components/Searchbar";
+import Image from "./components/Image";
+import Summary from "./components/Summary";
 
 const App = () => {
   interface Pokemon {
     name: string;
+    imagepath: string;
+    genera: Array<string>;
+    flavor_text_entries: Array<string>;
   }
 
   const [selectedPokemon, setSelectedPokemon] = useState<Pokemon>();
@@ -17,23 +22,20 @@ const App = () => {
   return (
     <div className="App">
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
         {!selectedPokemon ? (
-          <h1>Loading... </h1>
+          <h1>Who's that Pokemon?</h1>
         ) : (
           <h1>{selectedPokemon.name}</h1>
         )}
       </div>
-      <Searchbar onChange={setPokemon} />
-      <div className="card"></div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Searchbar onClick={setPokemon} />
+      <div>
+        <Image imagePath={selectedPokemon?.imagepath} />
+        <Summary
+          category={selectedPokemon?.genera}
+          entries={selectedPokemon?.flavor_text_entries}
+        />
+      </div>
     </div>
   );
 };

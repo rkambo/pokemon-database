@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
+import "../styles/Searchbar.css";
 
-const Searchbar = () => {
+const Searchbar = (props) => {
   const [pokemonSearchQuery, setPokemonSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState(null);
 
@@ -29,8 +30,17 @@ const Searchbar = () => {
   }, [pokemonSearchQuery]);
 
   return (
-    <div>
+    <div className="Searchbar">
       <input type="text" onChange={handleOnChange} />
+      <ul>
+        {!suggestions
+          ? null
+          : suggestions.map((item, i) => (
+              <li onClick={() => props.onClick(item)} key={item.id}>
+                {item.name}
+              </li>
+            ))}
+      </ul>
     </div>
   );
 };

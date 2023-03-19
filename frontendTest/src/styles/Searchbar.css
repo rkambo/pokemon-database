@@ -1,0 +1,31 @@
+.Searchbar {
+  width: 100%;
+  border: 1px solid;
+}
+
+.Searchbar input {
+  width: 100%;
+  border: none;
+  padding: 5px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.Searchbar ul {
+  list-style-type: none;
+  text-align: left;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid grey;
+}
+
+.Searchbar li {
+  background-color: rgb(173, 159, 159);
+  cursor: pointer;
+  text-transform: capitalize;
+}
+
+.Searchbar li:hover,
+li.active {
+  background-color: rgb(206, 203, 203);
+}
