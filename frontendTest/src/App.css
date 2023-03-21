@@ -5,6 +5,9 @@
   text-align: center;
 }
 
+.App {
+  font-family: "Titillium Web", sans-serif;
+}
 .logo {
   height: 6em;
   padding: 1.5em;
