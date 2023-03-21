@@ -1,8 +1,10 @@
 const Summary = (props) => {
   const getEntry = () => {
-    const entries = props.entries.filter((entry) => {});
-    console.log("Entries: " + entries);
-    return entries[0];
+    const entries = props.entries.filter(
+      (entry) => entry.language.name == "en"
+    );
+    return entries[Math.floor(Math.random() * (entries.length - 1))]
+      .flavor_text;
   };
 
   return (

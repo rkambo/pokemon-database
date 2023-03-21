@@ -25,11 +25,13 @@ const App = () => {
         {!selectedPokemon ? (
           <h1>Who's that Pokemon?</h1>
         ) : (
-          <h1>{selectedPokemon.name}</h1>
+          <h1 style={{ textTransform: "capitalize" }}>
+            {selectedPokemon.name}
+          </h1>
         )}
       </div>
       <Searchbar onClick={setPokemon} />
-      <div>
+      <div style={{ display: "flex" }}>
         <Image imagePath={selectedPokemon?.imagepath} />
         <Summary
           category={selectedPokemon?.genera}
