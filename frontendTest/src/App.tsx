@@ -21,7 +21,14 @@ const App = () => {
 
   return (
     <div className="App">
-      <div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         {!selectedPokemon ? (
           <h1>Who's that Pokemon?</h1>
         ) : (
@@ -29,8 +36,9 @@ const App = () => {
             {selectedPokemon.name}
           </h1>
         )}
+        <Searchbar onClick={setPokemon} />
       </div>
-      <Searchbar onClick={setPokemon} />
+
       <div style={{ display: "flex" }}>
         <Image imagePath={selectedPokemon?.imagepath} />
         <Summary

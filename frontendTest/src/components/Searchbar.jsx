@@ -12,7 +12,7 @@ const Searchbar = (props) => {
   };
 
   useEffect(() => {
-    if (pokemonSearchQuery.length > 2) {
+    if (pokemonSearchQuery.length > 0) {
       const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -30,7 +30,7 @@ const Searchbar = (props) => {
   }, [pokemonSearchQuery]);
 
   return (
-    <div className="Searchbar">
+    <div className="Searchbar" style={{ width: "400px" }}>
       <input type="text" onChange={handleOnChange} />
       <ul>
         {!suggestions
