@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../styles/Searchbar.css";
+import { CSSTransition } from "react-transition-group";
 
 const Searchbar = (props) => {
   const [pokemonSearchQuery, setPokemonSearchQuery] = useState("");
@@ -30,18 +31,28 @@ const Searchbar = (props) => {
   }, [pokemonSearchQuery]);
 
   return (
-    <div className="Searchbar" style={{ width: "400px" }}>
-      <input type="text" onChange={handleOnChange} />
-      <ul>
-        {!suggestions
-          ? null
-          : suggestions.map((item, i) => (
-              <li onClick={() => props.onClick(item)} key={item.id}>
-                {item.name}
-              </li>
-            ))}
-      </ul>
-    </div>
+    <>
+      <div className="searchContainer">
+        <input type="text" onChange={handleOnChange} />
+        <CSSTransition
+          in={suggestions && pokemonSearchQuery.length != 0}
+          timeout={50}
+          classNames="dropdown-menu"
+        >
+          <div className="dropdown">
+            {!suggestions || pokemonSearchQuery.length == 0 ? null : (
+              <ul>
+                {suggestions.map((item, i) => (
+                  <li onClick={() => props.onClick(item)} key={item.id}>
+                    {item.name}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </CSSTransition>
+      </div>
+    </>
   );
 };
 

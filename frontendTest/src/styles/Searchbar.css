@@ -3,15 +3,40 @@
   border: 1px solid;
 }
 
-.Searchbar input {
-  width: 100%;
+.searchContainer {
+  position: relative;
+}
+input {
+  width: 400px;
   border: none;
   padding: 5px;
   box-sizing: border-box;
   outline: none;
 }
 
-.Searchbar ul {
+.dropdown {
+  overflow: hidden;
+  position: sticky;
+  top: 40px;
+  left: 0;
+}
+
+.dropdown-menu-enter {
+  height: 0em;
+}
+.dropdown-menu-enter-done {
+  transition: height 0.5s linear;
+  height: 8em;
+}
+.dropdown-menu-exit {
+  transition: height 0.5s linear;
+  height: 0em;
+}
+.dropdown-menu-exit-done {
+  height: 0em;
+}
+
+.dropdown ul {
   list-style-type: none;
   text-align: left;
   margin: 0;
@@ -19,8 +44,8 @@
   border-top: 1px solid grey;
 }
 
-.Searchbar li {
-  background-color: rgb(173, 159, 159);
+.dropdown li {
+  /* background-color: rgb(173, 159, 159); */
   cursor: pointer;
   text-transform: capitalize;
 }

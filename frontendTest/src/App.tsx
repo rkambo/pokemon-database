@@ -20,7 +20,7 @@ const App = () => {
   };
 
   return (
-    <div className="App">
+    <div className="App" style={{ display: "flex", flexDirection: "column" }}>
       <div
         style={{
           display: "flex",
