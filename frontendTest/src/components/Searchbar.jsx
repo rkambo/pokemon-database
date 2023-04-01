@@ -20,20 +20,27 @@ const Searchbar = (props) => {
         body: JSON.stringify({ name: pokemonSearchQuery.toLowerCase() }),
       };
 
-      fetch("http://localhost:3001/searchPokemon", requestOptions).then(
-        (response) => {
-          response.json().then((data) => {
-            setSuggestions(() => data.results);
-          });
-        }
-      );
+      fetch(
+        `${import.meta.env.VITE_BACKEND_ENDPOINT}/searchPokemon`,
+        requestOptions
+      ).then((response) => {
+        response.json().then((data) => {
+          setSuggestions(() => data.results);
+        });
+      });
     }
   }, [pokemonSearchQuery]);
 
   return (
     <>
       <div className="searchContainer">
-        <input type="text" onChange={handleOnChange} />
+        <CSSTransition
+          in={suggestions && pokemonSearchQuery.length != 0}
+          timeout={50}
+          classNames="input-menu"
+        >
+          <input type="text" onChange={handleOnChange} />
+        </CSSTransition>
         <CSSTransition
           in={suggestions && pokemonSearchQuery.length != 0}
           timeout={50}
