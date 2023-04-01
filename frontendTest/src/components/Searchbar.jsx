@@ -39,7 +39,11 @@ const Searchbar = (props) => {
           timeout={50}
           classNames="input-menu"
         >
-          <input type="text" onChange={handleOnChange} />
+          <input
+            className="input-standard"
+            type="text"
+            onChange={handleOnChange}
+          />
         </CSSTransition>
         <CSSTransition
           in={suggestions && pokemonSearchQuery.length != 0}
