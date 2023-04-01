@@ -6,10 +6,12 @@
 .searchContainer {
   position: relative;
 }
-.searchContainer input {
+.input-standard {
   width: 400px;
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
   padding: 5px;
   box-sizing: border-box;
   outline: none;
