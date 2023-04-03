@@ -5,11 +5,36 @@ import { CSSTransition } from "react-transition-group";
 const Searchbar = (props) => {
   const [pokemonSearchQuery, setPokemonSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState(null);
+  const [cursor, setCursor] = useState(-1);
 
   const handleOnChange = ({ target }) => {
     const { value } = target;
 
     setPokemonSearchQuery(() => value);
+  };
+
+  const handleOnKeyDown = ({ key }) => {
+    if (suggestions) {
+      const lastSuggestion = suggestions.length - 1;
+      switch (key) {
+        case "ArrowDown":
+          if (cursor == lastSuggestion) {
+            setCursor(0);
+          } else {
+            setCursor((prev) => prev + 1);
+          }
+          break;
+        case "ArrowUp":
+          if (cursor == 0) {
+            setCursor(lastSuggestion);
+          } else {
+            setCursor((prev) => prev - 1);
+          }
+          break;
+        case "Enter":
+          props.onClick(suggestions[cursor]);
+      }
+    }
   };
 
   useEffect(() => {
@@ -43,6 +68,7 @@ const Searchbar = (props) => {
             className="input-standard"
             type="text"
             onChange={handleOnChange}
+            onKeyDown={handleOnKeyDown}
           />
         </CSSTransition>
         <CSSTransition
@@ -54,7 +80,11 @@ const Searchbar = (props) => {
             {!suggestions || pokemonSearchQuery.length == 0 ? null : (
               <ul>
                 {suggestions.map((item, i) => (
-                  <li onClick={() => props.onClick(item)} key={item.id}>
+                  <li
+                    className={i === cursor ? "active" : ""}
+                    onClick={() => props.onClick(item)}
+                    key={item.id}
+                  >
                     {item.name}
                   </li>
                 ))}
