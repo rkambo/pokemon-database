@@ -1,0 +1,11 @@
+.summary {
+  width: clamp(45ch, 50%, 75ch);
+}
+
+.title {
+  font-size: 3em;
+}
+
+.entry {
+  font-size: 2em;
+}
