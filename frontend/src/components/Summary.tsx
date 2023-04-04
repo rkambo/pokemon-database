@@ -1,3 +1,5 @@
+import "../styles/Summary.css";
+
 const Summary = (props) => {
   const getEntry = () => {
     const entries = props.entries.filter(
@@ -20,9 +22,9 @@ const Summary = (props) => {
   };
 
   return (
-    <div>
-      {!props.category ? <h1></h1> : <h1>{getCategory()}</h1>}
-      {!props.entries ? <h1></h1> : <h1>{getEntry()}</h1>}
+    <div className="summary">
+      {!props.category ? <></> : <h1 className="title">{getCategory()}</h1>}
+      {!props.entries ? <></> : <h1 className="entry">{getEntry()}</h1>}
     </div>
   );
 };
