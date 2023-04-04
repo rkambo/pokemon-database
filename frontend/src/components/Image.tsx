@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import "../styles/Image.css";
 
 const Image = (props) => {
   return <img src={props.imagePath} />;

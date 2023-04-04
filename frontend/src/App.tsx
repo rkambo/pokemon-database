@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./App.css";
+import "./styles/App.css";
 import Searchbar from "./components/Searchbar";
 import Image from "./components/Image";
 import Summary from "./components/Summary";
@@ -19,15 +19,8 @@ const App = () => {
   };
 
   return (
-    <div className="App" style={{ display: "flex", flexDirection: "column" }}>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
+    <div className="App">
+      <div className="searchbar-container">
         {!selectedPokemon ? (
           <h1>Who's that Pokemon?</h1>
         ) : (
@@ -38,13 +31,17 @@ const App = () => {
         <Searchbar onClick={setPokemon} />
       </div>
 
-      <div style={{ display: "flex" }}>
-        <Image imagePath={selectedPokemon?.imagepath} />
-        <Summary
-          category={selectedPokemon?.genera}
-          entries={selectedPokemon?.flavor_text_entries}
-        />
-      </div>
+      {!selectedPokemon ? (
+        <></>
+      ) : (
+        <div className="summary-container">
+          <Image imagePath={selectedPokemon?.imagepath} />
+          <Summary
+            category={selectedPokemon?.genera}
+            entries={selectedPokemon?.flavor_text_entries}
+          />
+        </div>
+      )}
     </div>
   );
 };
