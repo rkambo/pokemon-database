@@ -20,7 +20,6 @@ const App = () => {
 
   return (
     <div className="App">
-      (
       <div className="searchbar-container">
         {!selectedPokemon ? (
           <h1>Who's that Pokemon?</h1>
@@ -31,7 +30,7 @@ const App = () => {
         )}
         <Searchbar onClick={setPokemon} />
       </div>
-      )
+
       {!selectedPokemon ? (
         <></>
       ) : (
