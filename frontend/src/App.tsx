@@ -13,24 +13,37 @@ const App = () => {
   }
 
   const [selectedPokemon, setSelectedPokemon] = useState<Pokemon>();
+  const [backendActive, setBackendActive] = useState(false);
 
   const setPokemon = (pokemon: Pokemon) => {
     setSelectedPokemon(pokemon);
   };
 
+  useEffect(() => {
+    if (!backendActive) {
+      fetch(`${import.meta.env.VITE_BACKEND_ENDPOINT}/healthCheck`).then(
+        (response) => {
+          setBackendActive(true);
+        }
+      );
+    }
+  }, [backendActive]);
   return (
     <div className="App">
-      <div className="searchbar-container">
-        {!selectedPokemon ? (
-          <h1>Who's that Pokemon?</h1>
-        ) : (
-          <h1 style={{ textTransform: "capitalize" }}>
-            {selectedPokemon.name}
-          </h1>
-        )}
-        <Searchbar onClick={setPokemon} />
-      </div>
-
+      {!backendActive ? (
+        <h1>Loading...</h1>
+      ) : (
+        <div className="searchbar-container">
+          {!selectedPokemon ? (
+            <h1>Who's that Pokemon?</h1>
+          ) : (
+            <h1 style={{ textTransform: "capitalize" }}>
+              {selectedPokemon.name}
+            </h1>
+          )}
+          <Searchbar onClick={setPokemon} />
+        </div>
+      )}
       {!selectedPokemon ? (
         <></>
       ) : (
