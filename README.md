@@ -5,12 +5,11 @@
 A Pokedex like application where you can search up any Pokemon and get a randomized Pokedex Entry. Information retrieved via the [PokeAPI](https://pokeapi.co/).
 
 [Try it out here!](https://rkambo-pokemon-database.netlify.app/)
-Note: It may take up to 10-20 seconds for the list to populate the first time as the backend services need to wake from being suspended!
-
+Note: Using a free Railway tier for hosting the backend so there may be some periods of outages. If this occurs, check back in a few days when credits are replenished!
 
 ## Stack
   
    - Frontend: React (Hosted via Netlify)
-   - Backend: NodeJS (Hosted via Render)
+   - Backend: NodeJS (Hosted via Railway)
    - Database: MongoDB
    - Utility with Go to update Mongo Database 
