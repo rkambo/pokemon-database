@@ -13,7 +13,7 @@ const App = () => {
   }
 
   const [selectedPokemon, setSelectedPokemon] = useState<Pokemon>();
-  const [backendActive, setBackendActive] = useState(false);
+  const [backendActive, setBackendActive] = useState<Boolean>();
 
   const setPokemon = (pokemon: Pokemon) => {
     setSelectedPokemon(pokemon);
@@ -21,17 +21,22 @@ const App = () => {
 
   useEffect(() => {
     if (!backendActive) {
-      fetch(`${import.meta.env.VITE_BACKEND_ENDPOINT}/healthCheck`).then(
-        (response) => {
-          setBackendActive(true);
-        }
-      );
+      fetch(`${import.meta.env.VITE_BACKEND_ENDPOINT}/healthCheck`)
+        .then((response) => {
+          setBackendActive(response.status == 200 ? true : false);
+        })
+        .catch((err) => {
+          setBackendActive(false);
+        });
     }
   }, [backendActive]);
   return (
     <div className="App">
-      {!backendActive ? (
-        <h1>Loading...</h1>
+      {backendActive == false ? (
+        <h2>
+          Backend out of service :( Please check back later when credits are
+          replenished
+        </h2>
       ) : (
         <div className="searchbar-container">
           {!selectedPokemon ? (
