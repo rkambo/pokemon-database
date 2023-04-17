@@ -98,7 +98,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	err = os.WriteFile(os.Getenv("REF_FILEPATH"), recordJson, 0644)
+	err = os.WriteFile(cwd + os.Getenv("REF_FILEPATH"), recordJson, 0644)
 	if err != nil {
 		log.Fatalln(err)
 	}
