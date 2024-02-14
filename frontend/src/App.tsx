@@ -40,7 +40,7 @@ const App = () => {
       ) : (
         <div className="searchbar-container">
           {!selectedPokemon ? (
-            <h1>Who's that Pokemon?</h1>
+            <></>
           ) : (
             <h1 style={{ textTransform: "capitalize" }}>
               {selectedPokemon.name}

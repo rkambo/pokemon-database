@@ -47,6 +47,12 @@ const findDocuments = async (db, query, limit) => {
     .limit(limit)
     .toArray();
 };
+
+const getTopEntry = async (db) => {
+  const collection = db.collection(collName);
+
+  return collection.findOne({ id: 1 });
+};
 const insertDocuments = (db, doc) => {
   // Get the documents collection
   const collection = db.collection(collName);
@@ -82,4 +88,5 @@ module.exports = {
   findDocuments,
   insertDocuments,
   getFirstDoc,
+  getTopEntry,
 };

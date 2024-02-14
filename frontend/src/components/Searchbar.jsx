@@ -3,6 +3,7 @@ import "../styles/Searchbar.css";
 import { CSSTransition } from "react-transition-group";
 
 const Searchbar = (props) => {
+  const [onDefault, setOnDefault] = useState(true);
   const [pokemonSearchQuery, setPokemonSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState(null);
   const [cursor, setCursor] = useState(-1);
@@ -38,7 +39,22 @@ const Searchbar = (props) => {
   };
 
   useEffect(() => {
-    if (pokemonSearchQuery.length > 0) {
+    if (onDefault) {
+      const requestOptions = {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      };
+
+      fetch(
+        `${import.meta.env.VITE_BACKEND_ENDPOINT}/getFirstEntry`,
+        requestOptions
+      ).then((response) => {
+        response.json().then((data) => {
+          props.onClick(data.results);
+          setOnDefault(false);
+        });
+      });
+    } else if (pokemonSearchQuery.length > 0) {
       const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -54,7 +70,7 @@ const Searchbar = (props) => {
         });
       });
     }
-  }, [pokemonSearchQuery]);
+  }, [onDefault, pokemonSearchQuery]);
 
   return (
     <>

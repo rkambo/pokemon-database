@@ -21,7 +21,11 @@ const search = async (req, res) => {
   res.send({ results: results });
 };
 
+const getFirstEntry = async (req, res) => {
+  res.send({ results: await mongoUtil.getTopEntry(db) });
+};
 module.exports = {
   search,
   dbHealthCheck,
+  getFirstEntry,
 };
