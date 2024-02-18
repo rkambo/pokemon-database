@@ -4,7 +4,7 @@
 
 To compile the go files, run the following command in the root directory:
 
-<code>go build bin/runMe src/\*.go</code>
+<code>go build -o bin/runMe src/*.go</code>
 
 and to run the build, use the command:
 
