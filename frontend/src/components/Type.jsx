@@ -1,9 +1,9 @@
 import "../styles/Type.css";
 
-const Type = () => {
+const Type = (props) => {
   return (
-    <div class="type normal">
-      <h1>NORMAL</h1>
+    <div className={"type " + props.type.type.name}>
+      <h1 style={{ textTransform: "uppercase" }}>{props.type.type.name}</h1>
     </div>
   );
 };
