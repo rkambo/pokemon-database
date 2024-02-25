@@ -4,6 +4,7 @@ import Searchbar from "./components/Searchbar";
 import Image from "./components/Image";
 import Summary from "./components/Summary";
 import Type from "./components/Type";
+import TypeRelationTable from "./components/TypeRelationTable";
 
 const App = () => {
   interface Pokemon {
@@ -11,7 +12,7 @@ const App = () => {
     imagepath: string;
     genera: Array<string>;
     flavor_text_entries: Array<string>;
-    types: Array<string>;
+    types: Array<any>;
   }
 
   const [selectedPokemon, setSelectedPokemon] = useState<Pokemon>();
@@ -59,7 +60,7 @@ const App = () => {
             <Image imagePath={selectedPokemon?.imagepath} />
             <div className="type-container">
               {selectedPokemon?.types.map((type) => (
-                <Type type={type}></Type>
+                <Type type={type.type.name}></Type>
               ))}
             </div>
           </div>
@@ -69,6 +70,7 @@ const App = () => {
           />
         </div>
       )}
+      <TypeRelationTable types={selectedPokemon?.types}></TypeRelationTable>
     </div>
   );
 };

@@ -12,7 +12,8 @@ app.use(cors());
 
 app.get("/healthCheck", (req, res) => searchDB.dbHealthCheck(req, res));
 app.get("/getFirstEntry", (req, res) => searchDB.getFirstEntry(req, res));
-app.post("/searchPokemon", (req, res) => searchDB.search(req, res));
+app.post("/searchPokemon", (req, res) => searchDB.searchPokemon(req, res));
+app.post("/getTypeRelations", (req, res) => searchDB.searchTypes(req, res));
 
 console.log(`App listening on port ${port}...`);
 app.listen(port);

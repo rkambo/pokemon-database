@@ -2,7 +2,7 @@ const MongoClient = require("mongodb").MongoClient;
 require("dotenv").config({ path: ".env" });
 
 const dbName = process.env.DB_NAME;
-const collName = process.env.DB_COLLECTION;
+const pokemonCollection = process.env.DB_POKEMON_COLLECTION;
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0-kq00f.azure.mongodb.net/test?retryWrites=true&w=majority`;
 
 let _db = "";
@@ -26,13 +26,13 @@ const getDb = function () {
 };
 
 const getFirstDoc = async (db) => {
-  const collection = db.collection(collName);
+  const collection = db.collection(pokemonCollection);
   return collection.findOne({
     id: 1,
   });
 };
 
-const findDocuments = async (db, query, limit) => {
+const findDocuments = async (db, collName, query, limit) => {
   if (limit === undefined) {
     limit = 5;
   }
@@ -49,13 +49,13 @@ const findDocuments = async (db, query, limit) => {
 };
 
 const getTopEntry = async (db) => {
-  const collection = db.collection(collName);
+  const collection = db.collection(pokemonCollection);
 
   return collection.findOne({ id: 1 });
 };
 const insertDocuments = (db, doc) => {
   // Get the documents collection
-  const collection = db.collection(collName);
+  const collection = db.collection(pokemonCollection);
 
   if (doc == null || doc.name == null) {
     console.error("Error: Insufficient details in entry");
