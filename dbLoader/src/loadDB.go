@@ -37,6 +37,11 @@ type Pokemon struct {
 			Name string `json:"name" bson:"name"`
 		}
 	}
+	Types []struct {
+		Type struct {
+			Name string `json:"name" bson:"name"`
+		}
+	}
 }
 
 var mutex = &sync.Mutex{}
@@ -62,8 +67,8 @@ func apiCallout(endpoint string) (response string) {
 
 // Retrieves a batch of URLS from PokeAPI, which are the API endpoints
 // for Pokemon species information
-func getUrlBatches() []string {
-	batch := apiCallout(os.Getenv("POKEAPI_SPECIESQUERY"))
+func getUrlBatches(endpoint string) []string {
+	batch := apiCallout(endpoint)
 
 	var batchTwoResponseMap map[string]any
 	json.Unmarshal([]byte(batch), &batchTwoResponseMap)
@@ -79,20 +84,17 @@ func getUrlBatches() []string {
 }
 
 // Calls out to the list of URLS via Go Routines
-func bulkInfoRetrieve(batch []string) (pokemonMapResponse *map[string](Pokemon)) {
-	pokemonMap := make(map[string](Pokemon))
+func bulkInfoRetrieve(batch []string, pokemonMap *map[string](Pokemon)) {
 
 	var wg sync.WaitGroup
 	bar := progressbar.Default(int64(len(batch)))
 
 	for _, v := range batch {
 		wg.Add(1)
-		go wrapApiCallout(&wg, v, &pokemonMap, bar)
+		go wrapApiCallout(&wg, v, pokemonMap, bar)
 	}
 
 	wg.Wait()
-
-	return &pokemonMap
 }
 
 // Go routine method that wraps the callout and formatting the payload
@@ -114,20 +116,33 @@ func formatPayload(response string, pokemonMap *map[string](Pokemon)) {
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
-	setImagePath(&data)
-	(*pokemonMap)[data.Name] = data
+
+	if(len(data.Types) != 0) {
+		entry := ((*pokemonMap)[data.Name])
+		entry.Types = data.Types
+		((*pokemonMap)[data.Name]) = entry
+	} else {
+		setImagePath(&data)
+		((*pokemonMap)[data.Name]) = data
+	}
 }
 
 // Main control function
 func loadDB() {
 	fmt.Println("Getting URL Batch...")
-	urlBatch := getUrlBatches()
+	speciesInfoBatch := getUrlBatches(os.Getenv("POKEAPI_SPECIESQUERY"))
+	infoBatch := getUrlBatches(os.Getenv("POKEAPI_INFOQUERY"))
 
-	fmt.Println("Batch Retrieved! Retrieving Pokemon info...")
-	pokemonMap := bulkInfoRetrieve(urlBatch)
+	pokemonMap := make(map[string](Pokemon))
 
+	fmt.Println("Batches Retrieved! Retrieving Pokemon species info...")
+	bulkInfoRetrieve(speciesInfoBatch, &pokemonMap)
+
+	fmt.Println("Batches Retrieved! Retrieving Pokemon general info...")
+	bulkInfoRetrieve(infoBatch, &pokemonMap)
+	
 	fmt.Println("Info Retrieved! Loading into DB...")
-	loadPokemon(pokemonMap)
+	loadPokemon(&pokemonMap)
 
 	fmt.Println("Program Complete!")
 }

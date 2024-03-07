@@ -1,0 +1,99 @@
+.type-container {
+  display: flex;
+  justify-content: center;
+}
+
+div .type {
+  display: flex;
+  width: 158px;
+  height: 63px;
+  margin: 5px;
+  border: 1px solid #000000;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 35px;
+  justify-content: center;
+}
+
+div .type h1 {
+  font-family: "Source Code Pro";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 25px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  letter-spacing: 0.2em;
+  color: #ffffff;
+}
+
+div .type.normal {
+  background: hsl(52, 10%, 44%);
+}
+div .type.water {
+  background: hsl(216, 59%, 50%);
+}
+
+div .type.fire {
+  background: hsl(7, 65%, 50%);
+}
+
+div .type.grass {
+  background: hsl(108, 55%, 43%);
+}
+
+div .type.electric {
+  background: hsl(50, 70%, 49%);
+}
+
+div .type.bug {
+  background: hsl(86, 61%, 31%);
+}
+
+div .type.ice {
+  background: hsl(195, 50%, 67%);
+}
+
+div .type.flying {
+  background: hsl(194, 83%, 56%);
+}
+
+div .type.steel {
+  background: hsl(194, 6%, 57%);
+}
+
+div .type.fighting {
+  background: hsl(0, 93%, 27%);
+}
+
+div .type.dragon {
+  background: hsl(237, 49%, 27%);
+}
+
+div .type.rock {
+  background: hsl(36, 35%, 34%);
+}
+
+div .type.ground {
+  background: hsl(43, 68%, 34%);
+}
+
+div .type.psychic {
+  background: hsl(302, 69%, 46%);
+}
+
+div .type.poison {
+  background: hsl(302, 85%, 24%);
+}
+
+div .type.dark {
+  background: hsl(300, 12%, 19%);
+}
+
+div .type.fairy {
+  background: hsl(302, 42%, 61%);
+}
+
+div .type.ghost {
+  background: hsl(285, 59%, 35%);
+}

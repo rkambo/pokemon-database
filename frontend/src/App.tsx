@@ -3,6 +3,8 @@ import "./styles/App.css";
 import Searchbar from "./components/Searchbar";
 import Image from "./components/Image";
 import Summary from "./components/Summary";
+import Type from "./components/Type";
+import TypeRelationTable from "./components/TypeRelationTable";
 
 const App = () => {
   interface Pokemon {
@@ -10,6 +12,7 @@ const App = () => {
     imagepath: string;
     genera: Array<string>;
     flavor_text_entries: Array<string>;
+    types: Array<any>;
   }
 
   const [selectedPokemon, setSelectedPokemon] = useState<Pokemon>();
@@ -40,7 +43,7 @@ const App = () => {
       ) : (
         <div className="searchbar-container">
           {!selectedPokemon ? (
-            <h1>Who's that Pokemon?</h1>
+            <></>
           ) : (
             <h1 style={{ textTransform: "capitalize" }}>
               {selectedPokemon.name}
@@ -53,13 +56,21 @@ const App = () => {
         <></>
       ) : (
         <div className="summary-container">
-          <Image imagePath={selectedPokemon?.imagepath} />
+          <div className="container">
+            <Image imagePath={selectedPokemon?.imagepath} />
+            <div className="type-container">
+              {selectedPokemon?.types.map((type) => (
+                <Type type={type.type.name}></Type>
+              ))}
+            </div>
+          </div>
           <Summary
             category={selectedPokemon?.genera}
             entries={selectedPokemon?.flavor_text_entries}
           />
         </div>
       )}
+      <TypeRelationTable types={selectedPokemon?.types}></TypeRelationTable>
     </div>
   );
 };

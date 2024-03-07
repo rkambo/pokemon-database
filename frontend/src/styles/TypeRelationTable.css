@@ -1,0 +1,28 @@
+.type-relation {
+  width: 5em;
+  height: 2em;
+}
+
+tr {
+  display: flex;
+  align-items: center;
+  padding: 1em;
+}
+
+tr:first-of-type {
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
+}
+
+tr:last-of-type {
+  border-bottom-left-radius: 25px;
+  border-bottom-right-radius: 25px;
+}
+
+tr:nth-of-type(odd) {
+  background-color: #383838;
+}
+
+tr:nth-of-type(even) {
+  background-color: #4f4f4f;
+}
