@@ -5,24 +5,10 @@ const dbName = process.env.DB_NAME;
 const pokemonCollection = process.env.DB_POKEMON_COLLECTION;
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0-kq00f.azure.mongodb.net/test?retryWrites=true&w=majority`;
 
-let _db = "";
-
-openConn = (callback) => {
-  MongoClient.connect(
-    uri,
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    },
-    function (err, client) {
-      _db = client.db(dbName);
-      return callback(err);
-    }
-  );
-};
+const client = new MongoClient(uri, { monitorCommands: true });
 
 const getDb = function () {
-  return _db;
+  return client.db(dbName);
 };
 
 const getFirstDoc = async (db) => {
@@ -83,7 +69,6 @@ const insertDocuments = (db, doc) => {
 };
 
 module.exports = {
-  openConn,
   getDb,
   findDocuments,
   insertDocuments,

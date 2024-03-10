@@ -1,14 +1,10 @@
 const mongoUtil = require("./mongoUtil.js");
 require("dotenv").config({ path: ".env" });
-let db;
 
 const pokemonCollection = process.env.DB_POKEMON_COLLECTION;
 const typeCollection = process.env.DB_TYPE_COLLECTION;
 
-mongoUtil.openConn(function (err) {
-  db = mongoUtil.getDb();
-  if (err) console.log(err);
-});
+const db = mongoUtil.getDb();
 
 const dbHealthCheck = async (req, res) => {
   const results = await mongoUtil.getFirstDoc(db);
