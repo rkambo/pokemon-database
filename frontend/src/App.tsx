@@ -36,19 +36,9 @@ const App = () => {
   return (
     <div className="App">
       {backendActive == false ? (
-        <h2>
-          Backend out of service :( Please check back later when credits are
-          replenished
-        </h2>
+        <h2>Backend out of service :(</h2>
       ) : (
         <div className="searchbar-container">
-          {!selectedPokemon ? (
-            <></>
-          ) : (
-            <h1 style={{ textTransform: "capitalize" }}>
-              {selectedPokemon.name}
-            </h1>
-          )}
           <Searchbar onClick={setPokemon} />
         </div>
       )}
@@ -58,6 +48,9 @@ const App = () => {
         <div className="summary-container">
           <div className="container">
             <Image imagePath={selectedPokemon?.imagepath} />
+            <h1 style={{ textTransform: "capitalize" }}>
+              {selectedPokemon.name}
+            </h1>
             <div className="type-container">
               {selectedPokemon?.types.map((type) => (
                 <Type type={type.type.name}></Type>

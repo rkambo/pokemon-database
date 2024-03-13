@@ -1,5 +1,6 @@
 .summary {
   width: clamp(45ch, 50%, 75ch);
+  align-self: center;
 }
 
 .title {
