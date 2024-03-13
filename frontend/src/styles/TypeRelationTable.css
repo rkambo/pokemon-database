@@ -1,3 +1,8 @@
+.type-relation-table {
+  align-self: center;
+  padding: 2em;
+}
+
 .type-relation {
   width: 5em;
   height: 2em;

@@ -89,7 +89,7 @@ const TypeRelationTable = (props) => {
   }, [primaryTypeRelations.relations, secondaryTypeRelations.relations]);
 
   return (
-    <div>
+    <div className="type-relation-table">
       <table>
         {4 in typeRelations ? (
           <tr>
